@@ -1,0 +1,23 @@
+file 1354 1514293320                                            
+version 2
+run General-0-20171226-13:53:58-4576
+attr configname General
+attr datetime 20171226-13:53:58
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network StopWait
+attr processid 4576
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 0 StopWait.receiver "" ETV
+0	387 590 3 85 21.00134 426.362985417754 25 1 18 234 2810
+0	977 251 89 115 433.275125318778 472.27663625798 10 19 21 199 3969
+0	1228 125 117 125 474.27885625798 482.28773625798 5 21 22 106 2248
+

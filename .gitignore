@@ -1,6 +1,6 @@
 # Ignore all
-*
+/*
 #Except from
 !.gitignore
-!/Caso3-SW/*
-!/Caso3-GBN/*
+!/Caso3-SW
+!/Caso3-GBN

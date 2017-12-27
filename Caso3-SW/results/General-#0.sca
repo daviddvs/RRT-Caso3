@@ -1,0 +1,74 @@
+version 2
+run General-0-20171226-13:53:58-4576
+attr configname General
+attr datetime 20171226-13:53:58
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network StopWait
+attr processid 4576
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+scalar StopWait.receiver #ACK 22
+scalar StopWait.receiver #NACK 18
+statistic StopWait.receiver "hop count"
+field count 40
+field mean 13.475
+field stddev 6.7253348024562
+field min 1
+field max 22
+field sum 539
+field sqrsum 9027
+attr type int
+bin	-inf	0
+bin	-10	0
+bin	-9	0
+bin	-8	0
+bin	-7	0
+bin	-6	0
+bin	-5	0
+bin	-4	0
+bin	-3	0
+bin	-2	0
+bin	-1	0
+bin	0	0
+bin	1	1
+bin	2	1
+bin	3	1
+bin	4	2
+bin	5	1
+bin	6	4
+bin	7	1
+bin	8	1
+bin	9	1
+bin	10	1
+bin	11	1
+bin	12	3
+bin	13	1
+bin	14	1
+bin	15	1
+bin	16	1
+bin	17	2
+bin	18	1
+bin	19	5
+bin	20	1
+bin	21	8
+bin	22	1
+bin	23	0
+bin	24	0
+bin	25	0
+bin	26	0
+bin	27	0
+bin	28	0
+bin	29	0
+bin	30	0
+bin	31	0
+bin	32	0
+bin	33	0
+
