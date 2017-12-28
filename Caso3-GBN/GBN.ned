@@ -48,8 +48,8 @@ network GoBackN
         channel C extends DatarateChannel
         {
             datarate = 100000bps;
-            per = 0.05;
-            delay = 4000ms;
+            per = 0.5;
+            delay = 1000ms;
         }
     submodules:
         source: source {

@@ -16,8 +16,9 @@ private:
     int base, N, nextSeqNum;
     int n;
     cQueue *txQueue, *window, *copiaWindow;
-    paquete *nuevoPaq, *copiaPaq, *copia2Paq, *recibPaq;
+    paquete *nuevoPaq, *copiaPaq, *copia2Paq, *recibACK;
     cMessage *newMsg;
+    bool first;
 protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
@@ -31,6 +32,8 @@ void sender::initialize(){
     window = new cQueue("window");
     copiaWindow = new cQueue("copiaWindow");
     base=0; N=4; nextSeqNum=0;
+    first=true;
+    newMsg = new cMessage("TIMEOUT");
 }
 
 void sender::handleMessage(cMessage *msg) {
@@ -45,7 +48,7 @@ void sender::handleMessage(cMessage *msg) {
     }
     else if(strcmp(msg -> getName(),"ACK") == 0) {
         event = 1; //legada de ACK
-        recibPaq = (paquete*) msg;
+        recibACK = (paquete*) msg;
     }
     else if(strcmp(msg -> getName(),"TIMEOUT") == 0) {
         event = 2;
@@ -56,8 +59,12 @@ void sender::handleMessage(cMessage *msg) {
 
         if(event == 0) {
             if ( window -> isEmpty() ) { //Se inicia el temporizador
-                cancelAndDelete(newMsg);
-                newMsg = new cMessage("TIMEOUT");
+                if (!first) {
+                    //cancelAndDelete(newMsg);
+                    cancelEvent(newMsg);
+                }
+                first=false;
+                //cMessage *newMsg = new cMessage("TIMEOUT");
                 scheduleAt(simTime()+10, newMsg);
             }
             nuevoPaq = (paquete*) txQueue -> pop();
@@ -76,12 +83,15 @@ void sender::handleMessage(cMessage *msg) {
              }
         }
         else if(event == 1) { //Se borran tantos como hayan seq haya llegado y se reinicia el timeout
-            for(n=1; n <= (recibPaq->getMensaje() + 1) ; n++) {
-                window -> pop();
-                nextSeqNum--;
+            for(n=1; n <= (recibACK->getMensaje() + 1) ; n++) {
+                if (!window->isEmpty()) {
+                    window -> pop();
+                    nextSeqNum--;
+                }
+
             }
+            cancelEvent(newMsg);//se borra sea cual sea el ACK
             state = 0;
-            cancelAndDelete(newMsg);
         }
         else if(event == 2) {//Enviar todos los que estan en la ventana de nuevo
             for(n=0; n<nextSeqNum; n++) {
@@ -89,8 +99,9 @@ void sender::handleMessage(cMessage *msg) {
                 nuevoPaq -> setMensaje(n);
                 send(nuevoPaq,"out");
                 if (n==0){
-                    cancelAndDelete(newMsg);
-                    newMsg = new cMessage("TIMEOUT");
+                    //cancelAndDelete(newMsg);
+                    cancelEvent(newMsg);
+                    //cMessage *newMsg = new cMessage("TIMEOUT");
                     scheduleAt(simTime()+10, newMsg);
                 }
             }
@@ -101,12 +112,13 @@ void sender::handleMessage(cMessage *msg) {
             //No se hace nada
         }
         else if(event==1) {//Lo mismo que en state=0
-            for(n=1; n <= (recibPaq->getMensaje() + 1) ; n++) {
+            for(n=1; n <= (recibACK->getMensaje() + 1) ; n++) {
                  window -> pop();
                  nextSeqNum--;
             }
+            //cancelAndDelete(newMsg);
+            cancelEvent(newMsg);
             state = 0;
-            cancelAndDelete(newMsg);
         }
         else if(event==2) {//Lo mismo que en state=0 pero cambiando N
             for(n=0; n<N; n++) {
@@ -114,8 +126,9 @@ void sender::handleMessage(cMessage *msg) {
                 nuevoPaq -> setMensaje(n);
                 send(nuevoPaq,"out");
                 if (n==0){
-                    cancelAndDelete(newMsg);
-                    newMsg = new cMessage("TIMEOUT");
+                    //cancelAndDelete(newMsg);
+                    cancelEvent(newMsg);
+                    //cMessage *newMsg = new cMessage("TIMEOUT");
                     scheduleAt(simTime()+10, newMsg);
                 }
             }

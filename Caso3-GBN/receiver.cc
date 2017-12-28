@@ -18,6 +18,8 @@ private:
     //cQueue *txQueue;
     paquete *nuevoPaq;
     paquete *recibPaq;
+    bool esperar;
+    int expectedSeqNum;
 protected:
    virtual void initialize() override;
    virtual void handleMessage(cMessage *msg) override;
@@ -29,10 +31,14 @@ void receiver::initialize() {
 
     //state = 0;
     //txQueue = new cQueue("txQueue");
+    esperar = false;
 }
 void receiver::handleMessage(cMessage *msg) {
 
     recibPaq = (paquete*) msg;
+    if( esperar == true && recibPaq->getMensaje() == expectedSeqNum ) {
+        esperar=false;
+    }
 
     if (recibPaq -> hasBitError()) {
         //recibPaq -> removeFromOwnershipTree();
@@ -40,14 +46,16 @@ void receiver::handleMessage(cMessage *msg) {
         //nuevoPaq -> setBitLength(64);
         //send(nuevoPaq,"out");
         //numNACK++;
+        esperar=true;
+        expectedSeqNum=recibPaq->getMensaje();
     }
-    else {
+    else if (!esperar) {
         nuevoPaq = new paquete("ACK");
         nuevoPaq -> setBitLength(64);
         nuevoPaq -> setMensaje(recibPaq->getMensaje());
         send(nuevoPaq,"out");
         //numACK++;
-       }
+    }
 
 }
 
